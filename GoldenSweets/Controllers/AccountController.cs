@@ -1,0 +1,102 @@
+﻿using GoldenSweets.Core.ViewModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
+
+namespace GoldenSweets.Controllers
+{
+    public class AccountController : Controller
+    {
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
+        }
+
+        public IActionResult Login([FromQuery]string returnUrl)
+        {
+            return View(new LoginViewModel
+            {
+                ReturnUrl = returnUrl
+            });
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromForm]LoginViewModel loginViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(loginViewModel);
+            }
+
+            IdentityUser user = null;
+            if (loginViewModel.EmailOrUsername.Contains("@"))
+            {
+                user = await _userManager.FindByEmailAsync(loginViewModel.EmailOrUsername);
+            }
+            else
+            {
+                user = await _userManager.FindByNameAsync(loginViewModel.EmailOrUsername);
+            }
+
+            if (user != null)
+            {
+                var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
+                if (result.Succeeded)
+                {
+                    //Response.Cookies.Append("UserId", user.Id, new CookieOptions
+                    //{
+                    //    Expires = DateTime.Now.AddMonths(2)
+                    //});
+
+                    HttpContext.Session.SetString("UserId", user.Id);
+                    return Redirect(loginViewModel.ReturnUrl ?? "/");
+                }
+            }
+
+            ModelState.AddModelError("", "Invalid Username or Password");
+            return View(loginViewModel);
+        }
+
+        public IActionResult Register([FromQuery]string returnUrl)
+        {
+            return View(new RegisterViewModel
+            {
+                ReturnUrl = returnUrl
+            });
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register([FromForm]RegisterViewModel registerViewModel)
+        {
+    
+            return View(registerViewModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            HttpContext.Session.SetString("UserId", Guid.NewGuid().ToString());
+            return Redirect("/");
+        }
+
+        public async Task<IActionResult> UnAuthorized()
+        {
+            await Logout();
+            return RedirectToAction("Login");
+        }
+    }
+}
