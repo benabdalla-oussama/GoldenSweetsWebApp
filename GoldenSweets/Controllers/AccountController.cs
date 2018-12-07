@@ -80,7 +80,34 @@ namespace GoldenSweets.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromForm]RegisterViewModel registerViewModel)
         {
-    
+            if (!ModelState.IsValid)
+            {
+                return View(registerViewModel);
+            }
+
+            var user = new IdentityUser
+            {
+                Email = registerViewModel.Email,
+                UserName = registerViewModel.UserName
+            };
+
+            var result = await _userManager.CreateAsync(user, registerViewModel.Password);
+            if (result.Succeeded)
+            {
+                return await Login(new LoginViewModel
+                {
+                    EmailOrUsername = registerViewModel.Email,
+                    Password = registerViewModel.Password,
+                    ReturnUrl = registerViewModel.ReturnUrl
+                });
+
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
             return View(registerViewModel);
         }
 

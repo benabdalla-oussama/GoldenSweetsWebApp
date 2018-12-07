@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack --config webpack.config.js --watch --progress --profile",
     "build": "webpack --config webpack.config.js --progress --profile",
-    "build:prod": "webpack --env.NODE_ENV=production --config webpack.config.js --progress"
+    "build:prod": "webpack --env.NODE_ENV='production' --config webpack.config.js --progress"
   },
   "devDependencies": {
     "css-loader": "^0.28.8",
