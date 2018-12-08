@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GoldenSweets.Web.Core;
+using GoldenSweets.Web.Persistence;
 
 namespace GoldenSweets.Persistence
 {
@@ -19,26 +20,32 @@ namespace GoldenSweets.Persistence
         public IEnumerable<ShoppingCartItem> ShoppingCartItems { get; set; }
 
 
-        private ShoppingCartService(GoldenSweetsDbContext context)
+        private  ShoppingCartService(GoldenSweetsDbContext context)
         {
             _context = context;
+            
+        }
+
+        public async static Task<string> getCurrentUserId(UserManager<IdentityUser> userManager, HttpContext context)
+        {
+            var userId = userManager.GetUserId(context.User);
+            //var user = await userManager.FindByNameAsync(context.User?.Identity?.Name);
+            return userId;
         }
 
         public static ShoppingCartService GetCart(IServiceProvider services)
         {
             var httpContext = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext;
             var context = services.GetRequiredService<GoldenSweetsDbContext>();
-
-            var request = httpContext.Request;
-            var response = httpContext.Response;
+            var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
 
 
-            var userId = httpContext.Session.GetString("UserId") ?? Guid.NewGuid().ToString();
+            var userId = getCurrentUserId(userManager,httpContext) ;
+            var id = userId.ToString() ?? Guid.NewGuid().ToString();
 
-   
             return new ShoppingCartService(context)
             {
-                Id = userId
+                Id = id
             };
         }
 
@@ -89,8 +96,6 @@ namespace GoldenSweets.Persistence
 
         private async Task<int> AddOrRemoveCart(Cake cake, int qty)
         {
-
-
             var shoppingCartItem = await _context.ShoppingCartItems
                             .SingleOrDefaultAsync(s => s.CakeId == cake.Id && s.ShoppingCartId == Id);
 

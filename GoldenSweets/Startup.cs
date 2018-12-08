@@ -2,6 +2,8 @@
 using GoldenSweets.Core;
 using GoldenSweets.Core.Models;
 using GoldenSweets.Persistence;
+using GoldenSweets.Web.Core;
+using GoldenSweets.Web.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -36,10 +38,11 @@ namespace GoldenSweets
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //services.AddScoped<IUserService, UserService>();
+
             services.AddScoped<IShoppingCartService>(sp => ShoppingCartService.GetCart(sp));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddDbContext<GoldenSweetsDbContext>(ctx =>
             {
                 ctx.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
