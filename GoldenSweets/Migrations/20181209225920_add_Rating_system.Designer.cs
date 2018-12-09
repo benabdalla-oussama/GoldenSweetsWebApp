@@ -11,9 +11,10 @@ using System;
 namespace GoldenSweets.Migrations
 {
     [DbContext(typeof(GoldenSweetsDbContext))]
-    partial class GoldenSweetsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181209225920_add_Rating_system")]
+    partial class add_Rating_system
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GoldenSweets.Web.Core;
-using GoldenSweets.Web.Persistence;
+using GoldenSweets.Core;
+using GoldenSweets.Persistence;
 
 namespace GoldenSweets.Persistence
 {
@@ -29,7 +29,6 @@ namespace GoldenSweets.Persistence
         public async static Task<string> getCurrentUserId(UserManager<IdentityUser> userManager, HttpContext context)
         {
             var userId = userManager.GetUserId(context.User);
-            //var user = await userManager.FindByNameAsync(context.User?.Identity?.Name);
             return userId;
         }
 
@@ -41,7 +40,7 @@ namespace GoldenSweets.Persistence
 
 
             var userId = getCurrentUserId(userManager,httpContext) ;
-            var id = userId.ToString() ?? Guid.NewGuid().ToString();
+            var id = userId.Result ?? Guid.NewGuid().ToString();
 
             return new ShoppingCartService(context)
             {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GoldenSweets.Web.Controllers
+namespace GoldenSweets.Controllers
 {
     public class AppExceptionController : Controller
     {

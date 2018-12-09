@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace GoldenSweets.Web.Migrations
+namespace GoldenSweets.Migrations
 {
     public partial class intitlize : Migration
     {

@@ -14,6 +14,8 @@ namespace GoldenSweets.Persistence
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Gallery> Galleries { get; set; }
         public DbSet<GalleryImage> GalleryImages { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
+
 
         public GoldenSweetsDbContext(DbContextOptions<GoldenSweetsDbContext> options)
             : base(options)

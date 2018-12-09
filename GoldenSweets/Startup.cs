@@ -2,8 +2,8 @@
 using GoldenSweets.Core;
 using GoldenSweets.Core.Models;
 using GoldenSweets.Persistence;
-using GoldenSweets.Web.Core;
-using GoldenSweets.Web.Persistence;
+using GoldenSweets.Core;
+using GoldenSweets.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -24,8 +24,8 @@ namespace GoldenSweets
             //Configuration = configuration;
             var builder = new ConfigurationBuilder()
                 .SetBasePath(en.ContentRootPath)
-                //.AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.Production.json", optional: true)
+                .AddJsonFile("appsettings.json")
+                //.AddJsonFile($"appsettings.Production.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -38,7 +38,8 @@ namespace GoldenSweets
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            //services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRatingRepository, RatingRepository>();
 
             services.AddScoped<IShoppingCartService>(sp => ShoppingCartService.GetCart(sp));
 

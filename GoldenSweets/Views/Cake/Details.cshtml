@@ -1,26 +1,56 @@
-﻿@model Cake
+﻿@model CakeDetailRatingViewModel
 @{
     ViewData["Title"] = "Details";
 }
-<h2>@Model.Name</h2>
+<h2>@Model.cake.Name</h2>
 <br />
 <div class="row">
     <div class="col-md-6">
-        <img class="img-thumbnail" src="@Model.ImageUrl" alt="@Model.Name" />
+        <img class="img-thumbnail" src="@Model.cake.ImageUrl" alt="@Model.cake.Name" />
         <p></p>
     </div>
     <div class="col-md-6">
-        <h4>@Model.Name</h4>
-        <p><i>@Model.Price.ToString("c")</i></p>
-        <p>@Model.ShortDescription</p>
-        <p>@Model.LongDescription</p>
+        <h4>@Model.cake.Name</h4>
+        <p><i>@Model.cake.Price.ToString("c")</i></p>
+        <p>@Model.cake.ShortDescription</p>
+        <p>@Model.cake.LongDescription</p>
         <form asp-action="AddToShoppingCart"
               asp-controller="ShoppingCart"
-              asp-route-cakeId="@Model.Id"
+              asp-route-cakeId="@Model.cake.Id"
               method="post">
 
             <button class="btn btn-primary buy-now-btn">Add to Cart</button>
         </form>
 
+        <form asp-controller="cakes" asp-action="Rate" method="post" class="form-horizontal">
+
+                <div class="col-lg-8" style="padding-left: 0px;padding-top: 10px;">
+                    <span class="rating">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            var starClass = "star";
+                            if (Model.Value == 6 - i)
+                            {
+                                starClass += " active";
+                            }
+                            <span data-value="@(6 - i)" class="@starClass"></span>
+                        }
+                    </span>
+                </div>
+                <input asp-for="Value" />
+                <input type="hidden" asp-for="CakeId" class="form-control" />
+            <div class="form-group" >
+                <div class="col-md-offset-2 col-md-10" style="padding-left: 0px;padding-top: 10px;">
+                    <input type="submit" class="btn btn-primary" value="Submit" />
+                </div>
+            </div>
+        </form>
+
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/rating.js"></script>
+
+}
+

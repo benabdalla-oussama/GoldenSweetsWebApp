@@ -1,4 +1,4 @@
-﻿using GoldenSweets.Web.Core;
+﻿using GoldenSweets.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace GoldenSweets.Web.Persistence
+namespace GoldenSweets.Persistence
 {
     public class UserService : IUserService
     {
@@ -19,15 +19,11 @@ namespace GoldenSweets.Web.Persistence
             _context = context;
             _userManager = userManager;
         }
-        public async Task<IdentityUser> GetUser()
-        {
-            return await _userManager.FindByEmailAsync(_context.HttpContext.User?.Identity?.Name);
-        }
-
+        
         public async Task<string> GetUserId()
         {
-            var user = await _userManager.FindByEmailAsync(_context.HttpContext.User?.Identity?.Name);
-            return user.Id;
+            var userId = _userManager.GetUserId(_context.HttpContext.User);
+            return userId;
         }
     }
 }

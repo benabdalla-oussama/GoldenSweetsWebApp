@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace GoldenSweets.Web.Migrations
+namespace GoldenSweets.Migrations
 {
     [DbContext(typeof(GoldenSweetsDbContext))]
     [Migration("20181207024737_intitlize")]

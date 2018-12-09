@@ -1,6 +1,8 @@
-﻿using GoldenSweets.Core.Models;
+﻿using GoldenSweets.Core;
+using GoldenSweets.Core.Models;
 using GoldenSweets.Core.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace GoldenSweets.Controllers
@@ -9,11 +11,13 @@ namespace GoldenSweets.Controllers
     public class CakeController : Controller
     {
         private readonly ICakeRepository _cakeRepository;
+        private readonly IRatingRepository _ratingRepository;
         private readonly ICategoryRepository _categoryRepository;
 
-        public CakeController(ICakeRepository cakeRepository, ICategoryRepository categoryRepository)
+        public CakeController(ICakeRepository cakeRepository, IRatingRepository ratingRepository, ICategoryRepository categoryRepository)
         {
             _cakeRepository = cakeRepository;
+            _ratingRepository = ratingRepository;
             _categoryRepository = categoryRepository;
         }
 
@@ -32,10 +36,35 @@ namespace GoldenSweets.Controllers
         [HttpGet("details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
-
+            CakeDetailRatingViewModel ratingModel = new CakeDetailRatingViewModel();
+            var rating = await _ratingRepository.GetUserRatingByCakeAsync(id);
+            ratingModel.CakeId = id;
+            if(rating != null)
+            ratingModel.Value = rating.Value ;
             var cake = await _cakeRepository.GetCakeById(id);
-
-            return View(cake);
+            ratingModel.cake = cake;
+            return View(ratingModel);
         }
+
+        [HttpPost("Rate")]
+        public async Task<IActionResult> Details([Bind("Value,CakeId")] CakeDetailRatingViewModel model)
+        {
+            var existRating = await _ratingRepository.GetUserRatingByCakeAsync(model.CakeId);
+            if(existRating != null)
+            {
+                existRating.Value = model.Value;
+            }
+            else
+            {
+                Rating rating = new Rating();
+                rating.CakeId = model.CakeId;
+                rating.Value = model.Value;
+                rating.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                await _ratingRepository.AddRatingAsync(rating);
+            }
+            model.LoadCake(_cakeRepository);
+            return View(model);
+        }
+
     }
 }

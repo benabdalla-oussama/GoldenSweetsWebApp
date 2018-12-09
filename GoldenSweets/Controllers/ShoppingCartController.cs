@@ -1,10 +1,12 @@
 ﻿using GoldenSweets.Core.Models;
 using GoldenSweets.Core.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace GoldenSweets.Controllers
 {
+    [Authorize]
     public class ShoppingCartController : Controller
     {
         private readonly ICakeRepository _cakeRepository;
