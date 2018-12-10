@@ -33,7 +33,7 @@ namespace GoldenSweets.Persistence
                 .ToListAsync();
         }
 
-        public async Task<double> GetRatingNumberByCake(int cakeId)
+        public async Task<string> GetRatingNumberByCake(int cakeId)
         {
             IEnumerable<Rating> ratings = await GetRatingsByCake(cakeId);
             int som = 0;
@@ -41,8 +41,9 @@ namespace GoldenSweets.Persistence
             {
                 som += rating.Value;
             }
-            if (ratings.Count() == 0) return 0;
-            return som / ratings.Count();
+            if (ratings.Count() == 0) return "0";
+            float rate = (som / ratings.Count());
+            return rate.ToString("0.0"); 
         }
 
         public async Task<Rating> GetUserRatingByCakeAsync(int cakeId)
@@ -51,10 +52,10 @@ namespace GoldenSweets.Persistence
             return await _context.Ratings.SingleOrDefaultAsync(e => (e.CakeId == cakeId) && (e.UserId == userId));
         }
 
-        public async void UpdateRating(Rating rating)
+        public  void UpdateRating(Rating rating)
         {
-            _context.Update(rating);
-            await _context.SaveChangesAsync();
+            _context.Ratings.Update(rating);
+            _context.SaveChanges();
         }
         public async Task AddRatingAsync(Rating rating)
         {

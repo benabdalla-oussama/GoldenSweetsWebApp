@@ -18,5 +18,6 @@ namespace GoldenSweets.Core.ViewModel
         {
             return await cakeRepository.GetCakeById(CakeId);
         }
+
     }
 }

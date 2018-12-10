@@ -11,7 +11,7 @@ namespace GoldenSweets.Core
             
             Task<Rating> GetUserRatingByCakeAsync(int cakeId);
 
-            Task<double> GetRatingNumberByCake(int cakeId);
+            Task<string> GetRatingNumberByCake(int cakeId);
 
             Task<Rating> GetRatingById(int ratingId);
             void UpdateRating(Rating rating);

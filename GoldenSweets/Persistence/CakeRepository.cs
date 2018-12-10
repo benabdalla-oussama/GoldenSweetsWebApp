@@ -1,5 +1,7 @@
-﻿using GoldenSweets.Core.Dto;
+﻿using GoldenSweets.Core;
+using GoldenSweets.Core.Dto;
 using GoldenSweets.Core.Models;
+using GoldenSweets.Core.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +23,24 @@ namespace GoldenSweets.Persistence
             return await _context.Cakes.SingleOrDefaultAsync(e => e.Id == cakeId);
         }
         
-        public async Task<IEnumerable<Cake>> GetCakes(string category = null)
+        public async Task<List<CakeAndRating>> GetCakes(string category = null)
         {
 
             var query = _context.Cakes
                 .Include(c => c.Category)
+                .Select(e => new CakeAndRating
+                {
+                    Category = e.Category ,
+                    CategoryId = e.CategoryId ,
+                    Id = e.Id , 
+                    ImageUrl = e.ImageUrl , 
+                    IsCakeOfTheWeek = e.IsCakeOfTheWeek ,
+                    LongDescription = e.LongDescription ,
+                    Name = e.Name ,
+                    Price = e.Price ,
+                    ShortDescription = e.ShortDescription ,
+                    Rating = "0.0"
+                })
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(category))

@@ -14,6 +14,7 @@ namespace GoldenSweets.Controllers
         private readonly IRatingRepository _ratingRepository;
         private readonly ICategoryRepository _categoryRepository;
 
+
         public CakeController(ICakeRepository cakeRepository, IRatingRepository ratingRepository, ICategoryRepository categoryRepository)
         {
             _cakeRepository = cakeRepository;
@@ -30,6 +31,11 @@ namespace GoldenSweets.Controllers
                 Cakes = await _cakeRepository.GetCakes(selectedCategory),
                 CurrentCategory = selectedCategory ?? "All Cakes"
             };
+            for (int i =0; i < cakesListViewModel.Cakes.Count; i++)
+            {
+                string rating = await _ratingRepository.GetRatingNumberByCake(cakesListViewModel.Cakes[i].Id);
+                cakesListViewModel.Cakes[i].Rating = rating;
+            }
             return View(cakesListViewModel);
         }
 

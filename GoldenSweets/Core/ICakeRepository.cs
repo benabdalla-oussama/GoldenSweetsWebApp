@@ -1,4 +1,5 @@
 ﻿using GoldenSweets.Core.Dto;
+using GoldenSweets.Core.ViewModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
