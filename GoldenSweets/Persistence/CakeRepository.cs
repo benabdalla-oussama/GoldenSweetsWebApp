@@ -18,7 +18,7 @@ namespace GoldenSweets.Persistence
 
         public async Task<Cake> GetCakeById(int cakeId)
         {
-            return await _context.Cakes.FirstAsync(e => e.Id == cakeId);
+            return await _context.Cakes.SingleOrDefaultAsync(e => e.Id == cakeId);
         }
         
         public async Task<IEnumerable<Cake>> GetCakes(string category = null)

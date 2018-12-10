@@ -53,6 +53,8 @@ namespace GoldenSweets.Controllers
             if(existRating != null)
             {
                 existRating.Value = model.Value;
+                existRating.Cake = await model.LoadCake(_cakeRepository);
+                _ratingRepository.UpdateRating(existRating);
             }
             else
             {
@@ -62,7 +64,7 @@ namespace GoldenSweets.Controllers
                 rating.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 await _ratingRepository.AddRatingAsync(rating);
             }
-            model.LoadCake(_cakeRepository);
+            model.cake = await model.LoadCake(_cakeRepository);
             return View(model);
         }
 

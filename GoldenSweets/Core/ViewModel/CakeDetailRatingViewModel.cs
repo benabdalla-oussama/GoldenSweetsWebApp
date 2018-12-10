@@ -14,10 +14,9 @@ namespace GoldenSweets.Core.ViewModel
         public int CakeId { get; set; }
         public Cake cake { get; set; }
 
-        public async void LoadCake(ICakeRepository cakeRepository)
+        public async Task<Cake> LoadCake(ICakeRepository cakeRepository)
         {
-            var mycake = await cakeRepository.GetCakeById(CakeId);
-            cake = mycake ;
+            return await cakeRepository.GetCakeById(CakeId);
         }
     }
 }

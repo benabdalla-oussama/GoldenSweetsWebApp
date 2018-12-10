@@ -22,14 +22,7 @@ namespace GoldenSweets.Persistence
 
         public async Task<Rating> GetRatingById(int ratingId)
         {
-            if (_context.Ratings.Any())
-            {
-                return await _context.Ratings.FirstAsync(e => e.Id == ratingId);
-            }
-            else
-            {
-                return null;
-            }
+            return await _context.Ratings.SingleOrDefaultAsync(e => e.Id == ratingId);
         }
 
         public async Task<IEnumerable<Rating>> GetRatingsByCake(int cakeId)
@@ -54,25 +47,19 @@ namespace GoldenSweets.Persistence
 
         public async Task<Rating> GetUserRatingByCakeAsync(int cakeId)
         {
-            if (_context.Ratings.Any())
-            {
-                string userId = await _userService.GetUserId();
-                return  _context.Ratings.Where(e => (e.CakeId == cakeId) && (e.UserId == userId)).FirstOrDefault();
-            }
-            else
-            {
-                return null;
-            }
+            string userId = await _userService.GetUserId();
+            return await _context.Ratings.SingleOrDefaultAsync(e => (e.CakeId == cakeId) && (e.UserId == userId));
         }
 
-        public void UpdateRating(Rating rating)
+        public async void UpdateRating(Rating rating)
         {
-            _context.Ratings.Update(rating);
+            _context.Update(rating);
+            await _context.SaveChangesAsync();
         }
         public async Task AddRatingAsync(Rating rating)
         {
-            await _context.Ratings.AddAsync(rating);
-            await _context.SaveChangesAsync();
+             _context.Add(rating);
+             await _context.SaveChangesAsync();
         }
 
         public void Delete(int id)

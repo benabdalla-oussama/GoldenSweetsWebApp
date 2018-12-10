@@ -24,8 +24,8 @@ namespace GoldenSweets
             //Configuration = configuration;
             var builder = new ConfigurationBuilder()
                 .SetBasePath(en.ContentRootPath)
-                .AddJsonFile("appsettings.json")
-                //.AddJsonFile($"appsettings.Production.json", optional: true)
+                //.AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.Production.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
